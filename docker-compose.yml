@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  tetris:
+    build: .
+    container_name: tetris
+    volumes:
+      - .:/workspace
+    ipc: host
+    network_mode: host
+    privileged: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [ "gpu" ]
+    entrypoint: /bin/bash
+    stdin_open: true
+    tty: true
