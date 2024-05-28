@@ -6,6 +6,8 @@ services:
     container_name: tetris
     volumes:
       - .:/workspace
+    ports:
+      - "6006:6006"
     ipc: host
     network_mode: host
     privileged: true
