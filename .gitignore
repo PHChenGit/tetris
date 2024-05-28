@@ -1,6 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/pycharm,java,python,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=pycharm,java,python,visualstudiocode
 
+replay/*
+replay.gif
+logs/*
+
 ### Java ###
 # Compiled class file
 *.class
