@@ -28,6 +28,12 @@ python test_tetris_env.py
 tensorboard --logdir <your log dir path>
 ```
 
+e.g.
+
+```bash
+tensorboard --logdir logs/sb3_log
+```
+
 ## Step 5. Train your model
 ```python
 python app.py
