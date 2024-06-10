@@ -10,14 +10,31 @@ import shutil
 import glob
 import imageio
 
+ONE_K = 1000
+TEN_K = 10 * ONE_K
+HUNDRED_K = 100 * ONE_K
+ONE_M = 10 * HUNDRED_K 
+TEN_M = 10 * ONE_M
+HUNDER_M = 100 * ONE_M
+
+csv_file_path = './output/tetris_best_score_a2c_2M.csv'
+replay_gif_path = 'replay_a2c.gif'
+policy = "CnnPolicy"
+save_model_path = f'./models/112598072_a2c_{policy}_30env_2M.zip'
+tensorboard_log_path = "./logs/sb3_log"
+replay_folder = './replay/A2C'
+
 # Create an environment with 30 client threads
 vec_env = make_vec_env(TetrisEnv, n_envs=30)
-model = A2C("CnnPolicy", vec_env, verbose=1, tensorboard_log="./logs/sb3_log").learn(1000000)
+model = A2C(policy, vec_env, verbose=1, tensorboard_log=tensorboard_log_path)
+model.learn(total_timesteps=2*ONE_M, log_interval=50)
+
+# Save model
+model.save(save_model_path)
 
 obs = vec_env.reset()
-test_steps = 1000
+test_steps = 2*HUNDRED_K
 
-replay_folder = './replay'
 if os.path.exists(replay_folder):
     shutil.rmtree(replay_folder)
 
@@ -71,7 +88,7 @@ print(" Max reward=", max_reward, " Best video: " + best_replay_path)
 print(" Removed lines=", max_rm_lines, " lifetime=", max_lifetime)
 
 # Write a csv file
-with open('./output/tetris_best_score.csv', 'w') as fs:
+with open(csv_file_path, 'w') as fs:
     fs.write('id,removed_lines,played_steps\n')
     fs.write(f'0,{max_rm_lines}, {max_lifetime}\n')
     fs.write(f'1,{max_rm_lines}, {max_lifetime}\n')
@@ -82,7 +99,4 @@ filenames = sorted(glob.glob(best_replay_path + '/*.png'))
 images = []
 for filename in filenames:
     images.append(imageio.imread(filename))
-imageio.mimsave('replay.gif', images, loop=0)
-
-# Save model
-model.save('./models/112598072_a2c_30env_1M.zip')
+imageio.mimsave(replay_gif_path, images, loop=0)
